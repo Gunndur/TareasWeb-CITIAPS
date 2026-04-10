@@ -1,0 +1,13 @@
+.env
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+coverage.out
+cover.out
+*.log
+.DS_Store
+Thumbs.db
+.idea/

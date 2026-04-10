@@ -1,0 +1,255 @@
+# Tareas
+
+Aplicacion Web para gestionar tareas con un frontend en Nuxt 3, backend en Go y base de datos en MongoDB.
+
+Recordar clonar el repositorio desde github:
+```
+git clone https://github.com/Gunndur/TareasWeb-CITIAPS.git
+```
+
+## Estructura
+
+- `backend/`: API REST en Go.
+- `frontend/`: interfaz web en Nuxt 3.
+- `deployment/`: archivo `docker-compose.yml` y guia de despliegue con imagenes publicas.
+
+## Requisitos
+
+- Docker y Docker Compose, o bien:
+	- Go 1.26 o superior
+	- Node.js 20 o superior
+	- MongoDB 7 o superior
+
+## Opcion recomendada: Docker Compose
+
+El proyecto ya incluye un archivo para el despliegue en `deployment/docker-compose.yml` que levanta:
+
+- MongoDB con la imagen oficial `mongo:7`
+- Backend con la imagen `tgustafsson/tareas-backend:latest`
+- Frontend con la imagen `tgustafsson/tareas-frontend:latest`
+
+### Levantar todo el entorno
+
+Desde la carpeta `deployment`:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+### Acceso a los servicios
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8080
+- MongoDB: `mongodb://localhost:27017`
+
+### Detener el entorno
+
+```bash
+docker compose down
+```
+
+Por si quieres borrar tambien los datos de MongoDB:
+
+```bash
+docker compose down -v
+```
+
+## Ejecucion local del backend!!!!!!!!!!
+
+### Variables de entorno
+
+En `backend/.env` crea:
+
+```env
+PORT=8080
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB=taskmanager
+```
+
+### Ejecutar
+
+Desde la carpeta `backend`:
+
+```bash
+go mod tidy
+go run ./cmd/main.go
+```
+
+La API queda disponible en `http://localhost:8080`.
+
+## Ejecucion local del frontend!!!!!!!!!!!
+
+### Variables de entorno
+
+El frontend usa `NUXT_PUBLIC_API_BASE` para saber a que backend llamar.
+
+Ejemplo para desarrollo local:
+
+```env
+NUXT_PUBLIC_API_BASE=http://localhost:8080
+```
+
+### Ejecutar
+
+Desde la carpeta `frontend`:
+
+```bash
+npm install
+npm run dev
+```
+
+La aplicacion queda disponible en `http://localhost:3000`.
+
+## Configuracion de MongoDB!!!!!!!!!!!
+
+### Con Docker Compose
+
+MongoDB ya queda lista automaticamente con el servicio `mongodb` del archivo de despliegue.
+
+La conexion usada por el backend es:
+
+```text
+mongodb://mongodb:27017
+```
+
+### Instalacion local
+
+Si prefieres usar MongoDB instalado en tu pc, configura el backend con:
+
+```env
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB=taskmanager
+```
+
+Iniciar con una terminal `mongod`, mientras que en otra terminal, corrí `mongosh`.
+
+
+
+## API del backend
+
+- `GET /health`
+- `POST /tasks`
+- `POST /tasks/bulk`
+- `GET /tasks`
+- `GET /tasks/{id}`
+- `PUT /tasks/{id}/complete`
+- `DELETE /tasks/{id}`
+
+### Crear varias tareas
+
+El endpoint `POST /tasks/bulk` acepta un array JSON. para aceptar una gran cantidad de tareas para crear.
+
+#### Ejemplo para Postman
+
+Con esto, puedes llenar la base de datos con 20 tareas.
+
+- Method: `POST`
+- URL: `http://localhost:8080/tasks/bulk`
+- Headers: `Content-Type: application/json`
+- Body: raw JSON
+
+```json
+[
+	{
+		"title": "Tarea1: Hacer el frontend",
+		"description": "Tengo que terminar de hacer el frontend con vue3 y nuxt3 para poder enviarlo a Citiaps",
+		"tags": ["Frontend", "Programacion", "Citiaps"]
+	},
+	{
+		"title": "Tarea2: Crear API en Go",
+		"description": "Desarrollar la API REST en Go para gestionar tareas con MongoDB",
+		"tags": ["Backend", "Go", "MongoDB"]
+	},
+	{
+		"title": "Tarea3: Conectar frontend con backend",
+		"description": "Consumir la API desde el frontend usando fetch o axios",
+		"tags": ["Frontend", "Backend", "Integracion"]
+	},
+	{
+		"title": "Tarea4: Disenar base de datos",
+		"description": "Definir estructura de la coleccion de tareas en MongoDB",
+		"tags": ["Base de datos", "MongoDB", "Backend"]
+	},
+	{
+		"title": "Tarea5: Implementar login",
+		"description": "Agregar autenticacion de usuarios en la aplicacion",
+		"tags": ["Seguridad", "Backend", "Frontend"]
+	},
+	{
+		"title": "Tarea6: Crear componente de tareas",
+		"description": "Desarrollar componente Vue para listar tareas",
+		"tags": ["Vue", "Frontend", "Componentes"]
+	},
+	{
+		"title": "Tarea7: Estilizar con Bulma",
+		"description": "Aplicar estilos usando Bulma en toda la app",
+		"tags": ["Frontend", "CSS", "Bulma"]
+	},
+	{
+		"title": "Tarea8: Agregar etiquetas",
+		"description": "Permitir agregar y visualizar tags en cada tarea",
+		"tags": ["Frontend", "Backend", "Feature"]
+	},
+	{
+		"title": "Tarea9: Implementar eliminar tarea",
+		"description": "Permitir borrar tareas desde la interfaz",
+		"tags": ["Frontend", "CRUD", "UX"]
+	},
+	{
+		"title": "Tarea10: Marcar tareas completadas",
+		"description": "Agregar opcion para marcar tareas como completadas",
+		"tags": ["Frontend", "Backend", "Estado"]
+	},
+	{
+		"title": "Tarea11: Crear documentacion",
+		"description": "Documentar endpoints y uso de la API",
+		"tags": ["Documentacion", "Backend", "API"]
+	},
+	{
+		"title": "Tarea12: Subir proyecto a GitHub",
+		"description": "Versionar el proyecto y subirlo a repositorio",
+		"tags": ["Git", "DevOps", "Repositorio"]
+	},
+	{
+		"title": "Tarea13: Deploy del backend",
+		"description": "Desplegar API en servidor o plataforma cloud",
+		"tags": ["Backend", "Deploy", "Cloud"]
+	},
+	{
+		"title": "Tarea14: Deploy del frontend",
+		"description": "Publicar frontend en hosting como Vercel",
+		"tags": ["Frontend", "Deploy", "Vercel"]
+	},
+	{
+		"title": "Tarea15: Optimizar rendimiento",
+		"description": "Reducir tiempos de carga y mejorar performance",
+		"tags": ["Optimizacion", "Performance", "Frontend"]
+	},
+	{
+		"title": "Tarea16: Validar formularios",
+		"description": "Agregar validaciones en inputs de tareas",
+		"tags": ["Frontend", "UX", "Validacion"]
+	},
+	{
+		"title": "Tarea17: Crear tests",
+		"description": "Escribir pruebas unitarias para backend",
+		"tags": ["Testing", "Backend", "QA"]
+	},
+	{
+		"title": "Tarea18: Manejo de errores",
+		"description": "Implementar manejo de errores en frontend y backend",
+		"tags": ["Errores", "Backend", "Frontend"]
+	},
+	{
+		"title": "Tarea19: Refactorizar codigo",
+		"description": "Mejorar estructura y legibilidad del codigo",
+		"tags": ["Codigo", "Refactor", "Buenas practicas"]
+	},
+	{
+		"title": "Tarea20: Preparar entrega final",
+		"description": "Revisar todo el proyecto antes de entregarlo",
+		"tags": ["Entrega", "Proyecto", "Revision"]
+	}
+]
+```
