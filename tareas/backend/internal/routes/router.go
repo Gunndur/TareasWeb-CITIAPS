@@ -25,6 +25,9 @@ func NewRouter(db *mongo.Database) http.Handler {
 	}).Methods(http.MethodGet)
 
 	// Rutas de tareas
+	r.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
 	r.HandleFunc("/tasks", taskHandler.CreateTask).Methods(http.MethodPost)
 	r.HandleFunc("/tasks/bulk", taskHandler.CreateTasksBulk).Methods(http.MethodPost)
 	r.HandleFunc("/tasks", taskHandler.ListTasks).Methods(http.MethodGet)
